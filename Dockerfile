@@ -43,9 +43,17 @@ RUN cd /usr/local/bin && \
 	curl -s -O https://raw.githubusercontent.com/pote/gvp/v${GVP}/bin/gvp && \
 	chmod +x gvp
 
+# Install NodeJS
+RUN curl -sL https://deb.nodesource.com/setup_0.12 | bash - && \
+	export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+	apt-get install -y nodejs && \
+	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Version dump
 RUN \
-	echo "Go" `go version`
+	echo "Go" `go version` && \
+	echo "NodeJS" `node -v` && echo "NPM" `npm -v` 
 
 COPY root /
 
