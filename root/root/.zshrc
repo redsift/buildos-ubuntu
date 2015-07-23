@@ -412,3 +412,6 @@ if [ -f $HOME/.zshrc-$(hostname -d) ]
 then
     . $HOME/.zshrc-$(hostname -d)
 fi
+
+# Redsift specific
+source $HOME/.zshrs/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh  
