@@ -279,9 +279,6 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
     dictd  gnats  identd  irc  man  messagebus  postfix  proxy  sys  www-data \
     avahi Debian-exim hplip list cupsys haldaemon ntpd proftpd statd
 
-# Hostname completion
-zstyle ':completion:*' hosts $( cat $HOME/.hosts* )
-
 # File/directory completion, for cd command
 zstyle ':completion:*:cd:*' ignored-patterns '(*/)#lost+found' '(*/)#CVS'
 #  and for all commands taking file arguments
