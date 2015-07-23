@@ -4,8 +4,8 @@ MAINTAINER Rahul Powar email: rahul@redsift.io version: 1.1.101
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y openssl ca-certificates curl rsync gettext-base \
-    	dnsutils build-essential libtool autoconf git vim emacs tcpdump zsh dialog man && \
-    	libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+    	dnsutils build-essential libtool autoconf git vim emacs tcpdump zsh dialog man \
+    	manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Replace shell with bash so we can source files
