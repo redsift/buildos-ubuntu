@@ -1,0 +1,39 @@
+machine: 
+  environment: 
+    CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+  services: 
+    - docker
+
+general:
+  branches:
+    only:
+      - master
+      
+checkout:
+  post:
+    - git fetch --tags
+    - git submodule sync
+    - git submodule update --init
+
+dependencies: 
+  override: 
+    - "docker info"
+    - "docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io"
+    - |
+        VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
+        sudo docker build -t $CONTAINER_NAME .
+        echo "Tagging as $CONTAINER_NAME:$VERSION"
+        docker tag -f $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
+        echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
+        docker tag -f $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
+
+test: 
+  override: 
+    - "docker run -d -e ROOT_URL=http://circleci.build $CONTAINER_NAME; sleep 10"
+
+deployment: 
+  prod: 
+    branch: master
+    commands: 
+      - "docker push $CONTAINER_NAME"
+      - "./circle_ci_trigger_build"
