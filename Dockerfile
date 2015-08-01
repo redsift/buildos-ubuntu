@@ -54,6 +54,7 @@ RUN curl -sL https://deb.nodesource.com/setup_0.12 | bash - && \
 RUN export DEBIAN_FRONTEND=noninteractive && \
 	add-apt-repository ppa:webupd8team/java && \
     apt-get update && \
+    dpkg -P oracle-java7-installer && \
     apt-get install -y oracle-java8-installer oracle-java8-set-default maven && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
