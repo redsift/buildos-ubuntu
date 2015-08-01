@@ -29,7 +29,7 @@ dependencies:
 
 test: 
   override: 
-    - "docker run -d -e ROOT_URL=http://circleci.build $CONTAINER_NAME; sleep 10"
+    - "docker run -a stdout -a stderr $CONTAINER_NAME /usr/bin/tools-version-dump"
 
 deployment: 
   prod: 
