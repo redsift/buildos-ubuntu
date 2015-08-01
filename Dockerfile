@@ -50,10 +50,18 @@ RUN curl -sL https://deb.nodesource.com/setup_0.12 | bash - && \
 	apt-get install -y nodejs && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Java 8
+RUN export DEBIAN_FRONTEND=noninteractive && \
+	add-apt-repository ppa:webupd8team/java && \
+    apt-get update && \
+    apt-get install -y oracle-java8-installer oracle-java8-set-default maven && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Version dump
 RUN \
 	echo "Go" `go version` && \
-	echo "NodeJS" `node -v` && echo "NPM" `npm -v` 
+	echo "NodeJS" `node -v` && echo "NPM" `npm -v`  && \
+	echo `java -version` && echo `mvn -version`
 
 COPY root /
 
