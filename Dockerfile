@@ -5,7 +5,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y openssl ca-certificates curl rsync gettext-base software-properties-common python-software-properties \
     	iputils-ping dnsutils build-essential libtool autoconf git mercurial vim emacs tcpdump zsh dialog man \
-    	manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+    	manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip \
+    	openjdk-8-jdk maven && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Replace shell with bash so we can source files
@@ -49,14 +50,6 @@ RUN curl -sL https://deb.nodesource.com/setup_0.12 | bash - && \
     apt-get update && \
 	apt-get install -y nodejs && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Install Java 8
-RUN export DEBIAN_FRONTEND=noninteractive && \
-	add-apt-repository ppa:webupd8team/java && \
-    apt-get update && \
-    dpkg -P oracle-java7-installer && \
-    apt-get install -y oracle-java8-installer oracle-java8-set-default maven && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 LABEL io.redsift.os=build
 
