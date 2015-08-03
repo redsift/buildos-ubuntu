@@ -29,7 +29,7 @@ dependencies:
 
 test: 
   override: 
-    - "docker run -a stdout -a stderr $CONTAINER_NAME /usr/bin/tools-version-dump"
+    - "docker run -a stdout -a stderr $CONTAINER_NAME /usr/bin/tools-version-dump.sh"
 
 deployment: 
   prod: 
