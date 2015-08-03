@@ -1,6 +1,7 @@
 machine: 
   environment: 
     CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+    CIRCLE_REVERSE_DEPENDENCIES: buildos
   services: 
     - docker
 
