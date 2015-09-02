@@ -6,6 +6,6 @@
 
 Software | Use | Version 
 ---------|-----|---------
-Nanomsg|Bus|0.5-beta
-GO|Dev|1.4.2|1.4.2
-Aerospike CLI|DB|
+Nanomsg|Bus|0.6-beta
+GO|Dev|1.5|
+Aerospike CLI|DB|3.5.11

@@ -5,7 +5,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y openssl ca-certificates curl rsync gettext-base software-properties-common python-software-properties \
     	iputils-ping dnsutils build-essential libtool autoconf git mercurial vim emacs tcpdump zsh dialog man \
-    	manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+    	pkg-config manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Replace shell with bash so we can source files
@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.5.11 GO=1.4.2 GPM=1.3.2 GVP=0.2.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.5.11 GO=1.5 GPM=1.3.2 GVP=0.2.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
