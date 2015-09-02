@@ -56,7 +56,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
-ENV PKG_CONFIG_PATH=/lib/pkgconfig # pkg-config is needed for go-nanomsg to find nanomsg
+# pkg-config is needed for go-nanomsg to find nanomsg
+ENV PKG_CONFIG_PATH=/lib/pkgconfig
 
 LABEL io.redsift.os=build
 
