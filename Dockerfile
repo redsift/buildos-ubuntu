@@ -35,7 +35,7 @@ RUN curl -L -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.t
 RUN cd /tmp && \
 	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-linux-amd64.zip -o glide.zip && \
 	unzip glide.zip && \
-	cp /tmp/linux-amd64 /usr/local/bin
+	cp /tmp/linux-amd64/glide /usr/local/bin
 
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
