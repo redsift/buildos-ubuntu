@@ -37,6 +37,13 @@ RUN cd /tmp && \
 	unzip glide.zip && \
 	cp /tmp/linux-amd64/glide /usr/local/bin
 
+# Install go-bindata to package files inside binary
+RUN go get -u github.com/jteeuwen/go-bindata && \
+	cd $GOPATH/src && \
+	go build github.com/jteeuwen/go-bindata/go-bindata && \
+	mv go-bindata /opt/go/bin && \
+	go-bindata -version
+
 # Install NodeJS
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
 	export DEBIAN_FRONTEND=noninteractive && \
