@@ -33,8 +33,8 @@ RUN curl -L -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.t
 
 # Install glide for Go dependency management
 RUN cd /tmp && \
-	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-$GLIDE-linux-amd64.tar.gz -o glide.zip && \
-	unzip glide.zip && \
+	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-$GLIDE-linux-amd64.tar.gz -o glide.tar.gz && \
+	tar -xz glide.tar.gz && \
 	cp /tmp/linux-amd64/glide /usr/local/bin
 
 # Install go-bindata to package files inside binary
