@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.5.11 GO_VERSION=1.5.1 GLIDE=0.6.1 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.5.11 GO_VERSION=1.5.1 GLIDE=0.7.1 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -33,7 +33,7 @@ RUN curl -L -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.t
 
 # Install glide for Go dependency management
 RUN cd /tmp && \
-	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-linux-amd64.zip -o glide.zip && \
+	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-$GLIDE-linux-amd64.tar.gz -o glide.zip && \
 	unzip glide.zip && \
 	cp /tmp/linux-amd64/glide /usr/local/bin
 
