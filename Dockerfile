@@ -25,7 +25,7 @@ RUN cd /tmp && \
 
 RUN echo $HOME
 # Install go 1.4
-RUN mkdir $HOME/go1.4 && curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME/go1.4 -xz
+RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
 
 # Install go 1.5.1
 RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
