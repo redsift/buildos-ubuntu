@@ -41,7 +41,7 @@ RUN cd /tmp && \
 RUN go get -u github.com/jteeuwen/go-bindata && \
 	cd $GOPATH/src && \
 	go build github.com/jteeuwen/go-bindata/go-bindata && \
-	mv go-bindata /opt/go/bin && \
+	mv go-bindata $GOROOT/bin && \
 	go-bindata -version
 
 # Install NodeJS
