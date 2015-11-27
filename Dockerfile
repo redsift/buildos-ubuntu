@@ -6,6 +6,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y unzip openssl ca-certificates curl rsync gettext-base software-properties-common python-software-properties \
     	iputils-ping dnsutils build-essential libtool autoconf git mercurial vim emacs tcpdump zsh dialog man \
     	pkg-config manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
+    	golang && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Replace shell with bash so we can source files
@@ -14,7 +15,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.5.11 GO_VERSION=1.5.1 GLIDE=0.7.1 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.5.11 GLIDE=0.7.2 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -24,12 +25,11 @@ RUN cd /tmp && \
 	cd /tmp && rm -Rf *
 
 # Go ENV vars
-ENV GOROOT=/opt/go GOPATH=/opt/gopath GO15VENDOREXPERIMENT=1 PATH=/opt/go/bin:$PATH
+RUN go env GOROOT
+ENV GOPATH=/opt/gopath GO15VENDOREXPERIMENT=1
 
-# Install Go
-RUN curl -L -s https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | tar -C /opt -xz && \
-	mkdir /opt/gopath && \
-	go get golang.org/x/tools/cmd/godoc 
+# Install godoc
+RUN go get golang.org/x/tools/cmd/godoc 
 
 # Install glide for Go dependency management
 RUN cd /tmp && \
