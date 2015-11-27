@@ -33,7 +33,7 @@ RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
 
 # Go ENV vars
 RUN go env GOROOT && go version
-ENV GOPATH=/opt/gopath GO15VENDOREXPERIMENT=1
+ENV GOPATH=/opt/gopath GO15VENDOREXPERIMENT=1 PATH=$PATH:/opt/go/bin
 
 RUN mkdir /opt/gopath
 
