@@ -14,12 +14,12 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.5.11 GO_VERSION=1.5.1 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.5.1 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
 	curl -L -s http://www.aerospike.com/download/tools/${AEROSPIKE_TOOLS}/artifact/ubuntu12 | tar xz && \
-	cd aerospike-tools-3.5.12-ubuntu12.04 && \
+	cd aerospike-tools-${AEROSPIKE_TOOLS}-ubuntu12.04 && \
 	DEBIAN_FRONTEND=noninteractive dpkg -i aerospike-tools-*.deb && \
 	cd /tmp && rm -Rf *
 
