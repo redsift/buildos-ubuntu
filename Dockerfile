@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.5.1 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.5.3 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -27,7 +27,7 @@ RUN echo $HOME
 # Install go 1.4
 RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
 
-# Install go 1.5.1
+# Install go
 RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
 	git checkout go$GO_VERSION && cd src && ./all.bash
 
