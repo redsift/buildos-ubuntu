@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.5.3 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6 GLIDE=0.8.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -32,7 +32,7 @@ RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
 	git checkout go$GO_VERSION && cd src && ./all.bash
 
 # Go ENV vars
-ENV GOPATH=/opt/gopath GO15VENDOREXPERIMENT=1 PATH=$PATH:/opt/go/bin
+ENV GOPATH=/opt/gopath PATH=$PATH:/opt/go/bin
 RUN go env GOROOT && go version
 
 RUN mkdir /opt/gopath
