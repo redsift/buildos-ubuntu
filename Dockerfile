@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6 GLIDE=0.9.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6 GLIDE=0.10.2 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -65,8 +65,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y --no-install-recommends openjdk-8-jdk maven && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install X11 dev
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y libx11-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
-# pkg-config is needed for go-nanomsg to find nanomsg
+# pkg-config is needed for nanomsg
 ENV PKG_CONFIG_PATH=/lib/pkgconfig
 
 LABEL io.redsift.os=build
