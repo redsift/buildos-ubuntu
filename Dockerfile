@@ -7,14 +7,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     	iputils-ping dnsutils build-essential libtool autoconf git mercurial vim emacs tcpdump zsh dialog man \
     	pkg-config manpages libpython-stdlib libpython2.7-minimal libpython2.7-stdlib mime-support python python-minimal python2.7 python2.7-minimal python-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-    
+
 # Replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6 GLIDE=0.10.2 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6.2 GLIDE=0.10.2 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
@@ -38,7 +38,7 @@ RUN go env GOROOT && go version
 RUN mkdir /opt/gopath
 
 # Install godoc
-RUN go get golang.org/x/tools/cmd/godoc 
+RUN go get golang.org/x/tools/cmd/godoc
 
 # Install glide for Go dependency management
 RUN cd /tmp && \
@@ -71,7 +71,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y libx11-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-    
+
 # pkg-config is needed for nanomsg
 ENV PKG_CONFIG_PATH=/lib/pkgconfig
 
