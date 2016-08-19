@@ -1,23 +1,24 @@
-machine: 
-  environment: 
+machine:
+  environment:
     CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+    CONTAINER_GO_NAME: quay.io/redsift/buildos-go-ubuntu
     CIRCLE_REVERSE_DEPENDENCIES: buildos
-  services: 
+  services:
     - docker
 
 general:
   branches:
     only:
       - master
-      
+
 checkout:
   post:
     - git fetch --tags
     - git submodule sync
     - git submodule update --init
 
-dependencies: 
-  override: 
+dependencies:
+  override:
     - "docker info"
     - "docker login -e $QUAY_EMAIL -u $QUAY_USER -p $QUAY_PASS quay.io"
     - |
@@ -27,14 +28,21 @@ dependencies:
         docker tag -f $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
         echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
         docker tag -f $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
+        sudo docker build -t $CONTAINER_GO_NAME -f Dockerfile.go.ubuntu .
+        echo "Tagging as $CONTAINER_GO_NAME:$VERSION"
+        docker tag -f $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:$VERSION
+        echo "Tagging as $CONTAINER_GO_NAME:${CIRCLE_BRANCH}"
+        docker tag -f $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
 
-test: 
-  override: 
+test:
+  override:
     - "docker run -a stdout -a stderr $CONTAINER_NAME /usr/bin/tools-version-dump.sh"
+    - "docker run -a stdout -a stderr $CONTAINER_GO_NAME /usr/bin/go-version-dump.sh"
 
-deployment: 
-  prod: 
+deployment:
+  prod:
     branch: master
-    commands: 
+    commands:
       - "docker push $CONTAINER_NAME"
+      - "docker push $CONTAINER_GO_NAME"
       - "./circle_ci_trigger_build"

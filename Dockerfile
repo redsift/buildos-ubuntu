@@ -14,17 +14,16 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.7.2 GO_VERSION=1.6.2 GLIDE=0.10.2 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.9.0 GO_VERSION=1.6.2 GLIDE=0.11.1 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
-	curl -L -s http://www.aerospike.com/download/tools/${AEROSPIKE_TOOLS}/artifact/ubuntu12 | tar xz && \
-	cd aerospike-tools-${AEROSPIKE_TOOLS}-ubuntu12.04 && \
+	curl -L -s http://www.aerospike.com/download/tools/${AEROSPIKE_TOOLS}/artifact/debian7 | tar xz && \
+	cd aerospike-tools-${AEROSPIKE_TOOLS}-debian7 && \
 	DEBIAN_FRONTEND=noninteractive dpkg -i aerospike-tools-*.deb && \
 	cd /tmp && rm -Rf *
 
-RUN echo $HOME
-# Install go 1.4
+# Install go 1.4.3
 RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
 
 # Install go
