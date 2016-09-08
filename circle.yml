@@ -36,8 +36,8 @@ dependencies:
 
 test:
   override:
-    - "docker run -a stdout -a stderr $CONTAINER_NAME /usr/bin/tools-version-dump.sh"
-    - "docker run -a stdout -a stderr $CONTAINER_GO_NAME /usr/bin/go-version-dump.sh"
+    - "docker run -a stdout -a stderr --entrypoint=/usr/bin/tools-version-dump.sh $CONTAINER_NAME"
+    - "docker run -a stdout -a stderr --entrypoint=/usr/bin/go-version-dump.sh $CONTAINER_GO_NAME"
 
 deployment:
   prod:
