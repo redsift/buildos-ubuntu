@@ -28,7 +28,7 @@ RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz 
 
 # Install go
 RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
-	git checkout go$GO_VERSION && cd src && sudo ./all.bash
+	git checkout go$GO_VERSION && cd src && ./all.bash
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath PATH=$PATH:/opt/go/bin
