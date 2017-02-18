@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.9.0 GO_VERSION=1.8.0 GLIDE=v0.12.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV AEROSPIKE_TOOLS=3.9.0 GO_VERSION=1.8 GLIDE=v0.12.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
 RUN cd /tmp && \
