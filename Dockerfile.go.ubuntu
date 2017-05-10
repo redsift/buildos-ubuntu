@@ -8,7 +8,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
-ENV GO_VERSION=1.8 GLIDE=v0.12.3
+ENV GO_VERSION=1.8.1 GLIDE=v0.12.3
 
 # Install go 1.4.3
 RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
