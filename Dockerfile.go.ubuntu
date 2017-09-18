@@ -1,24 +1,25 @@
 FROM quay.io/redsift/baseos
-MAINTAINER Deepak Prabhakara email: deepak@redsift.io version: 1.1.101
+MAINTAINER Deepak Prabhakara email: deepak@redsift.io version: 1.2.0
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y unzip openssl ca-certificates curl \
-    	git mercurial vim && \
+		wget g++ gcc libc6-dev make pkg-config \
+    git mercurial vim && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
 ENV GO_VERSION=1.9 GLIDE=v0.12.3
 
-# Install go 1.4.3
-RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
-
-# Install go
-RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
-	git checkout go$GO_VERSION && cd src && ./make.bash
+RUN set -eux; \
+    url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
+    wget -O go.tgz "$url"; \
+    tar -C /usr/local -xzf go.tgz; \
+    rm go.tgz; \
+    export PATH="/usr/local/go/bin:$PATH";
 
 # Go ENV vars
-ENV GOPATH=/opt/gopath PATH=$PATH:/opt/go/bin
+ENV GOPATH=/opt/gopath PATH="/usr/local/go/bin:$PATH"
 RUN go env GOROOT && go version
 
 RUN mkdir /opt/gopath
