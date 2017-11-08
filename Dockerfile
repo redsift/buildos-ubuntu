@@ -14,24 +14,18 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV AEROSPIKE_TOOLS=3.9.0 GO_VERSION=1.9 GLIDE=v0.12.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV GO_VERSION=1.9.2 GLIDE=v0.13.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-# Aerospike tools NOTE: They made a packaging error here hence the hardcoded cd
-RUN cd /tmp && \
-	curl -L -s http://www.aerospike.com/download/tools/${AEROSPIKE_TOOLS}/artifact/debian7 | tar xz && \
-	cd aerospike-tools-${AEROSPIKE_TOOLS}-debian7 && \
-	DEBIAN_FRONTEND=noninteractive dpkg -i aerospike-tools-*.deb && \
-	cd /tmp && rm -Rf *
-
-# Install go 1.4.3
-RUN curl -L -s https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz | tar -C $HOME -xz && mv $HOME/go $HOME/go1.4
-
-# Install go
-RUN cd /opt && git clone https://go.googlesource.com/go && cd go && \
-	git checkout go$GO_VERSION && cd src && ./make.bash
+RUN set -eux; \
+    url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
+    wget -O go.tgz "$url"; \
+    tar -C /usr/local -xzf go.tgz; \
+    rm go.tgz; \
+    export PATH="/usr/local/go/bin:$PATH";
 
 # Go ENV vars
-ENV GOPATH=/opt/gopath PATH=$PATH:/opt/go/bin
+ENV GOPATH=/opt/gopath PATH="/usr/local/go/bin:$PATH"
+
 RUN go env GOROOT && go version
 
 RUN mkdir /opt/gopath
@@ -53,7 +47,7 @@ RUN go get -u github.com/jteeuwen/go-bindata && \
 	go-bindata -version
 
 # Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 	export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
 	apt-get install -y nodejs && \
