@@ -30,6 +30,9 @@ RUN cd /tmp && \
 	tar -xf glide.tar.gz && \
 	cp /tmp/linux-amd64/glide /usr/local/bin
 
+# Install dep
+RUN go get -u github.com/golang/dep/cmd/dep
+
 # Install go-bindata to package files inside binary
 RUN go get -u github.com/jteeuwen/go-bindata && \
 	cd $GOPATH/src && \
