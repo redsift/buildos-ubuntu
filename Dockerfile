@@ -16,15 +16,14 @@ RUN pip install awscli
 # Versions
 ENV GO_VERSION=1.9.2 GLIDE=v0.13.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
+# Go ENV vars
+ENV GOPATH=/opt/gopath PATH="${GOPATH}/bin:/usr/local/go/bin:$PATH"
+
 RUN set -eux; \
     url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
     wget -O go.tgz "$url"; \
     tar -C /usr/local -xzf go.tgz; \
-    rm go.tgz; \
-    export PATH="/usr/local/go/bin:$PATH";
-
-# Go ENV vars
-ENV GOPATH=/opt/gopath PATH="/usr/local/go/bin:$PATH"
+    rm go.tgz;
 
 RUN go env GOROOT && go version
 
