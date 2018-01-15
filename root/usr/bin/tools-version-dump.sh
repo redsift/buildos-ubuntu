@@ -9,9 +9,9 @@ JAVA=$(java -version)
 MAVERN=$(mvn -version)
 GLIDE=$(glide --version)
 
-echo "Go ${GV}" 
 echo "NodeJS ${NODE}"
-echo "NPM ${NPM}" 
+echo "NPM ${NPM}"
 echo "$JAVA"
 echo "$MAVERN"
-echo "$GLIDE"
+
+/usr/bin/go-version-dump.sh
