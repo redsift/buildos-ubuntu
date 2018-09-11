@@ -14,7 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV GO_VERSION=1.10.2 GLIDE=v0.13.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV GO_VERSION=1.11 GLIDE=v0.13.0 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath

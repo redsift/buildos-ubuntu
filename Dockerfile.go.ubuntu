@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
-ENV GO_VERSION=1.10.2 GLIDE=v0.13.0
+ENV GO_VERSION=1.11 GLIDE=v0.13.0
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath
