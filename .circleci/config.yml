@@ -17,17 +17,17 @@ jobs:
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: docker build -t $CONTAINER_NAME .
       - run: |
-        echo "Tagging as $CONTAINER_NAME:$VERSION"
-        docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
-        echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
-        docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
+          echo "Tagging as $CONTAINER_NAME:$VERSION"
+          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
+          echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
+          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
       - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/tools-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
       - run: docker build -t $CONTAINER_GO_NAME -f Dockerfile.go.ubuntu .
       - run: |
-        echo "Tagging as $CONTAINER_GO_NAME:$VERSION"
-        docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:$VERSION
-        echo "Tagging as $CONTAINER_GO_NAME:${CIRCLE_BRANCH}"
-        docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
+          echo "Tagging as $CONTAINER_GO_NAME:$VERSION"
+          docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:$VERSION
+          echo "Tagging as $CONTAINER_GO_NAME:${CIRCLE_BRANCH}"
+          docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
       - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/go-version-dump.sh $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
 
 workflows:
