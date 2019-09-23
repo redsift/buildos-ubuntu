@@ -1,0 +1,38 @@
+version: 2.1
+
+jobs:
+  build:
+    shell: /bin/bash
+    environment:
+      CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+      CONTAINER_GO_NAME: quay.io/redsift/buildos-go-ubuntu
+      CIRCLE_REVERSE_DEPENDENCIES: buildos
+    docker:
+      - image: cibuilds/docker:18.05.0
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+      - setup_remote_docker
+      - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
+      - run: docker build -t $CONTAINER_NAME .
+      - run: |
+        echo "Tagging as $CONTAINER_NAME:$VERSION"
+        docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
+        echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
+        docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
+      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/tools-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
+      - run: docker build -t $CONTAINER_GO_NAME -f Dockerfile.go.ubuntu .
+      - run: |
+        echo "Tagging as $CONTAINER_GO_NAME:$VERSION"
+        docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:$VERSION
+        echo "Tagging as $CONTAINER_GO_NAME:${CIRCLE_BRANCH}"
+        docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
+      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/go-version-dump.sh $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - build:
+          context: org-global
