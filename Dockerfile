@@ -49,13 +49,6 @@ RUN go get -u github.com/jteeuwen/go-bindata && \
 	mv go-bindata $GOROOT/bin && \
 	go-bindata -version
 
-# Install NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-	export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && \
-	apt-get install -y nodejs && \
-	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Install JDK without things like fuse
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
