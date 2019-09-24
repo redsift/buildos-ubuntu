@@ -2,16 +2,14 @@
 
 set -e
 
-GV=$(go version)
-NODE=$(node -v)
-NPM=$(npm -v)
+# NODE=$(node -v)
+# NPM=$(npm -v)
 JAVA=$(java -version)
-MAVERN=$(mvn -version)
-GLIDE=$(glide --version)
+MAVEN=$(mvn -version)
 
-echo "NodeJS ${NODE}"
-echo "NPM ${NPM}"
+# echo "NodeJS ${NODE}"
+# echo "NPM ${NPM}"
 echo "$JAVA"
-echo "$MAVERN"
+echo "$MAVEN"
 
 /usr/bin/go-version-dump.sh
