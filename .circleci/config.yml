@@ -14,7 +14,7 @@ commands:
       - run: git submodule update --init
       - setup_remote_docker
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
-      - run: docker build -t $CONTAINER_NAME ${DF:-.}
+      - run: docker build -t $CONTAINER_NAME -f $DF .
       - run: |
           VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
           echo "Tagging as $CONTAINER_NAME:$VERSION"
@@ -28,6 +28,7 @@ jobs:
   build_ubuntu:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+      DF: Dockerfile
     executor: cidocker
     steps:
       - build_container
@@ -35,8 +36,8 @@ jobs:
   build_ubuntu_go:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-go-ubuntu
-      TV: go
       DF: Dockerfile.go.ubuntu
+      TV: go
     executor: cidocker
     steps:
       - build_container
