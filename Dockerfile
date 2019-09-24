@@ -22,7 +22,7 @@ ENV PATH="${GOPATH}/bin:/usr/local/go/bin:$PATH"
 
 RUN set -eux; \
     url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
-    wget -O go.tgz "$url"; \
+    wget -q -O go.tgz "$url"; \
     tar -C /usr/local -xzf go.tgz; \
     rm go.tgz;
 
