@@ -48,7 +48,7 @@ jobs:
     executor: cidocker
     steps:
       - checkout
-      - run: echo ./circle_ci_trigger_build
+      - run: ./circle_ci_trigger_build
 
 workflows:
   version: 2.1
