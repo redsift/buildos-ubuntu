@@ -22,6 +22,7 @@ commands:
           echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
       - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
+      - run: docker push $CONTAINER_NAME
 
 jobs:
   build_ubuntu:
