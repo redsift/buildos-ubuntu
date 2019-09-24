@@ -28,7 +28,6 @@ jobs:
   build_ubuntu:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
-      CIRCLE_REVERSE_DEPENDENCIES: buildos
     executor: cidocker
     steps:
       - build_container
@@ -40,6 +39,14 @@ jobs:
     executor: cidocker
     steps:
       - build_container
+  
+  trigger_builds:
+    environment:
+      CIRCLE_REVERSE_DEPENDENCIES: buildos
+    executor: cidocker
+    steps:
+      - checkout
+      - run: ./circle_ci_trigger_build
 
 workflows:
   version: 2.1
@@ -49,3 +56,8 @@ workflows:
           context: org-global
       - build_ubuntu_go:
           context: org-global
+      - trigger_builds:
+          context: org-global
+          requires:
+            - build_ubuntu
+            - build_ubuntu_go
