@@ -1,14 +1,13 @@
 version: 2.1
 
-jobs:
-  build:
+executors:
+  cidocker:
     shell: /bin/bash
-    environment:
-      CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
-      CONTAINER_GO_NAME: quay.io/redsift/buildos-go-ubuntu
-      CIRCLE_REVERSE_DEPENDENCIES: buildos
     docker:
       - image: cibuilds/docker:19.03.2
+
+commands:
+  build_container:
     steps:
       - checkout
       - run: git submodule sync
@@ -17,22 +16,35 @@ jobs:
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: docker build -t $CONTAINER_NAME .
       - run: |
+          VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
           echo "Tagging as $CONTAINER_NAME:$VERSION"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
           echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
-      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/tools-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
-      - run: docker build -t $CONTAINER_GO_NAME -f Dockerfile.go.ubuntu .
-      - run: |
-          echo "Tagging as $CONTAINER_GO_NAME:$VERSION"
-          docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:$VERSION
-          echo "Tagging as $CONTAINER_GO_NAME:${CIRCLE_BRANCH}"
-          docker tag $CONTAINER_GO_NAME:latest $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
-      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/go-version-dump.sh $CONTAINER_GO_NAME:${CIRCLE_BRANCH}
+      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
+
+jobs:
+  build_ubuntu:
+    environment:
+      CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
+      CIRCLE_REVERSE_DEPENDENCIES: buildos
+    executor: cidocker
+    steps:
+      - build_container
+
+  build_ubuntu_go:
+    environment:
+      CONTAINER_NAME: quay.io/redsift/buildos-go-ubuntu
+      TV: go
+    executor: cidocker
+    steps:
+      - build_container
 
 workflows:
   version: 2.1
   build-and-deploy:
     jobs:
-      - build:
+      - build_ubuntu:
+          context: org-global
+      - build_ubuntu_go:
           context: org-global
