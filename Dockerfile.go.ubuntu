@@ -22,13 +22,13 @@ ENV PATH="${GOPATH}/bin:/usr/local/go/bin:$PATH"
 # the checksum database.
 ENV GOPRIVATE="github.com/redsift/*"
 
-RUN mkdir -p $(go env GOBIN)
-
 RUN set -eux; \
     url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
     wget -q -O go.tgz "$url"; \
     tar -C /usr/local -xzf go.tgz; \
     rm go.tgz;
+
+RUN mkdir -p $(go env GOBIN)
 
 RUN go env GOROOT && go version
 
