@@ -9,11 +9,20 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
-ENV GO_VERSION=1.12.9 GLIDE=v0.13.3
+ENV GO_VERSION=1.13.1 GLIDE=v0.13.3
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath
+ENV GOBIN=/opt/gopath/bin
 ENV PATH="${GOPATH}/bin:/usr/local/go/bin:$PATH"
+
+# The new GOPRIVATE environment variable indicates module paths that are not publicly available.
+# It serves as the default value for the lower-level GONOPROXY and GONOSUMDB variables,
+# which provide finer-grained control over which modules are fetched via proxy and verified using
+# the checksum database.
+ENV GOPRIVATE="github.com/redsift/*"
+
+RUN mkdir -p $(go env GOBIN)
 
 RUN set -eux; \
     url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
@@ -23,23 +32,24 @@ RUN set -eux; \
 
 RUN go env GOROOT && go version
 
-RUN mkdir /opt/gopath
-
-# Install glide for Go dependency management
-RUN cd /tmp && \
-	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-$GLIDE-linux-amd64.tar.gz -o glide.tar.gz && \
-	tar -xf glide.tar.gz && \
-	cp /tmp/linux-amd64/glide /usr/local/bin
+# Install glide
+RUN curl --fail --silent https://glide.sh/get | sh && glide --version
 
 # Install dep
-RUN go get -u github.com/golang/dep/cmd/dep
+RUN curl --fail --silent https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && dep version
 
 # Install go-bindata to package files inside binary
-RUN go get -u github.com/jteeuwen/go-bindata && \
-	cd $GOPATH/src && \
-	go build github.com/jteeuwen/go-bindata/go-bindata && \
-	mv go-bindata $GOROOT/bin && \
-	go-bindata -version
+RUN go get github.com/go-bindata/go-bindata/... && go-bindata -version
+
+# gotestsum runs tests, prints friendly test output and a summary of the test run
+# Read more at https://circleci.com/blog/state-management-for-flutter-apps-with-mobx/
+RUN go get gotest.tools/gotestsum && gotestsum --version
+
+# Cleaning up
+RUN \
+    rm -rf /var/cache/apk && \
+    go clean -cache -modcache && \
+    true
 
 LABEL io.redsift.os=build-go-ubuntu
 
@@ -48,3 +58,4 @@ COPY root/usr /usr
 VOLUME [ "/artifacts" ]
 
 CMD [ "/bin/bash" ]
+
