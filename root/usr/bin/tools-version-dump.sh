@@ -7,5 +7,3 @@ MAVEN=$(mvn -version)
 
 echo "$JAVA"
 echo "$MAVEN"
-
-/usr/bin/go-version-dump.sh
