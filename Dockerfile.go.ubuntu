@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
-ENV GO_VERSION=1.14 GLIDE=v0.13.3
+ENV GO_VERSION=1.15.5
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath
@@ -31,12 +31,6 @@ RUN set -eux; \
 RUN mkdir -p $(go env GOBIN)
 
 RUN go env GOROOT && go version
-
-# Install glide
-RUN curl --fail --silent https://glide.sh/get | sh && glide --version
-
-# Install dep
-RUN curl --fail --silent https://raw.githubusercontent.com/golang/dep/master/install.sh | sh && dep version
 
 # Install go-bindata to package files inside binary
 RUN go get github.com/go-bindata/go-bindata/... && go-bindata -version

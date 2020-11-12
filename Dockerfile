@@ -14,40 +14,7 @@ RUN rm /bin/sh && ln -s /bin/zsh /bin/sh
 RUN pip install awscli
 
 # Versions
-ENV GO_VERSION=1.12.9 GLIDE=v0.13.3 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
-
-# Go ENV vars
-ENV GOPATH=/opt/gopath
-ENV PATH="${GOPATH}/bin:/usr/local/go/bin:$PATH"
-
-RUN set -eux; \
-    url="https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz"; \
-    wget -q -O go.tgz "$url"; \
-    tar -C /usr/local -xzf go.tgz; \
-    rm go.tgz;
-
-RUN go env GOROOT && go version
-
-RUN mkdir /opt/gopath
-
-# Install godoc
-RUN go get golang.org/x/tools/cmd/godoc
-
-# Install glide for Go dependency management
-RUN cd /tmp && \
-	curl -L https://github.com/Masterminds/glide/releases/download/$GLIDE/glide-$GLIDE-linux-amd64.tar.gz -o glide.tar.gz && \
-	tar -xf glide.tar.gz && \
-	cp /tmp/linux-amd64/glide /usr/local/bin
-
-# Install dep
-RUN go get -u github.com/golang/dep/cmd/dep
-
-# Install go-bindata to package files inside binary
-RUN go get -u github.com/jteeuwen/go-bindata && \
-	cd $GOPATH/src && \
-	go build github.com/jteeuwen/go-bindata/go-bindata && \
-	mv go-bindata $GOROOT/bin && \
-	go-bindata -version
+ENV JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Install JDK without things like fuse
 RUN export DEBIAN_FRONTEND=noninteractive && \
