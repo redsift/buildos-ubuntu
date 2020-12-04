@@ -7,5 +7,5 @@
 Software | Use | Version 
 ---------|-----|---------
 Nanomsg|Bus|0.6-beta
-GO|Dev|1.13.1|
+GO|Dev|1.15.6|
 Aerospike CLI|DB|3.5.11
