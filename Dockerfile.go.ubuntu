@@ -1,5 +1,5 @@
 FROM quay.io/redsift/baseos
-MAINTAINER Deepak Prabhakara email: deepak@redsift.io version: 1.2.0
+LABEL maintainer="Deepak Prabhakara <deepak@redsift.io>"
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -9,7 +9,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Versions
-ENV GO_VERSION=1.15.6
+ENV GO_VERSION=1.16.0
 
 # Go ENV vars
 ENV GOPATH=/opt/gopath
