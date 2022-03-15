@@ -9,6 +9,7 @@ executors:
 commands:
   build_container:
     steps:
+      - run: ssh -o StrictHostKeyChecking=no git@github.com || true
       - checkout
       - run: git submodule sync
       - run: git submodule update --init
