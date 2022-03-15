@@ -4,12 +4,11 @@ executors:
   cidocker:
     shell: /bin/bash
     docker:
-      - image: cibuilds/docker:19.03.2
+      - image: cibuilds/docker:19.03.5
 
 commands:
   build_container:
     steps:
-      - run: ssh -o StrictHostKeyChecking=no git@github.com || true
       - checkout
       - run: git submodule sync
       - run: git submodule update --init
