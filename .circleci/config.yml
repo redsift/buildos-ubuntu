@@ -10,12 +10,6 @@ commands:
   build_container:
     steps:
       - run: ssh -o StrictHostKeyChecking=no git@github.com || true
-      - configure_git: &configure_git
-          name: Configure git
-          command: |
-            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com".insteadOf "https://github.com"
-            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com/".insteadOf "git@github.com:"
-
       - checkout
       - run: git submodule sync
       - run: git submodule update --init
