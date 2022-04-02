@@ -17,8 +17,6 @@ commands:
             git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com".insteadOf "https://github.com"
             git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com/".insteadOf "git@github.com:"
       - checkout
-      - run: git submodule sync
-      - run: git submodule update --init
       - setup_remote_docker
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: docker build -t $CONTAINER_NAME -f $DF .
