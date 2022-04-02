@@ -33,7 +33,7 @@ RUN mkdir -p $(go env GOBIN)
 RUN go env GOROOT && go version
 
 # Install go-bindata to package files inside binary
-RUN go install https://github.com/go-bindata/go-bindata/tree/master/go-bindata@latest && go-bindata -version
+RUN go install github.com/go-bindata/go-bindata/go-bindata@latest && go-bindata -version
 
 RUN go install go install honnef.co/go/tools/cmd/staticcheck@latest && staticcheck -version
 
