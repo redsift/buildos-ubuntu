@@ -33,11 +33,13 @@ RUN mkdir -p $(go env GOBIN)
 RUN go env GOROOT && go version
 
 # Install go-bindata to package files inside binary
-RUN go get github.com/go-bindata/go-bindata/... && go-bindata -version
+RUN go install github.com/go-bindata/go-bindata@latest && go-bindata -version
+
+RUN go install go install honnef.co/go/tools/cmd/staticcheck@latest
 
 # gotestsum runs tests, prints friendly test output and a summary of the test run
 # Read more at https://circleci.com/blog/state-management-for-flutter-apps-with-mobx/
-RUN go get gotest.tools/gotestsum && gotestsum --version
+RUN go install gotest.tools/gotestsum@latest && gotestsum --version
 
 # Cleaning up
 RUN \
@@ -52,4 +54,3 @@ COPY root/usr /usr
 VOLUME [ "/artifacts" ]
 
 CMD [ "/bin/bash" ]
-
