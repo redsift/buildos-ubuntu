@@ -4,14 +4,19 @@ executors:
   cidocker:
     shell: /bin/bash
     docker:
-      - image: cibuilds/docker:19.03.2
+      - image: cibuilds/docker:19.03.5
 
 commands:
   build_container:
     steps:
+      - run: ssh -o StrictHostKeyChecking=no git@github.com || true
+      - run:
+          name: Configure git
+          command: |
+            rm ~/.gitconfig # delete junk from .gitconfig
+            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com".insteadOf "https://github.com"
+            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com/".insteadOf "git@github.com:"
       - checkout
-      - run: git submodule sync
-      - run: git submodule update --init
       - setup_remote_docker
       - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
       - run: docker build -t $CONTAINER_NAME -f $DF .
