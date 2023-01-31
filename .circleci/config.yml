@@ -27,7 +27,9 @@ commands:
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
           echo "Tagging as $CONTAINER_NAME:${BRANCH}"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${BRANCH}
-      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
+      - run:
+          BRANCH=$(echo $CIRCLE_BRANCH | tr / _)
+          docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
       - run: docker push $CONTAINER_NAME
 
 jobs:
