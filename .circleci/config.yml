@@ -22,13 +22,15 @@ commands:
       - run: docker build -t $CONTAINER_NAME -f $DF .
       - run: |
           VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
-          BRANCH=$(echo $CIRCLE_BRANCH | tr / _)
+          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
+          echo $CIRCLE_BRANCH $BRANCH
           echo "Tagging as $CONTAINER_NAME:$VERSION"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
           echo "Tagging as $CONTAINER_NAME:${BRANCH}"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${BRANCH}
-      - run:
-          BRANCH=$(echo $CIRCLE_BRANCH | tr / _)
+      - run: |
+          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
+          echo docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
           docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
       - run: docker push $CONTAINER_NAME
 
