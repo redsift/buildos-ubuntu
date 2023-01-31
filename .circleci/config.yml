@@ -4,7 +4,7 @@ executors:
   cidocker:
     shell: /bin/bash
     docker:
-      - image: cibuilds/docker:19.03.5
+      - image: cimg/base:2023.01
 
 commands:
   build_container:
@@ -61,7 +61,6 @@ jobs:
       - run: echo ./circle_ci_trigger_build
 
 workflows:
-  version: 2.1
   build-and-deploy:
     jobs:
       - build_ubuntu:
