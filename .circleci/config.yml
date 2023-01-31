@@ -22,11 +22,12 @@ commands:
       - run: docker build -t $CONTAINER_NAME -f $DF .
       - run: |
           VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
+          BRANCH=$(echo $CIRCLE_BRANCH | tr / _)
           echo "Tagging as $CONTAINER_NAME:$VERSION"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
-          echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
-          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
-      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
+          echo "Tagging as $CONTAINER_NAME:${BRANCH}"
+          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${BRANCH}
+      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
       - run: docker push $CONTAINER_NAME
 
 jobs:
@@ -46,7 +47,7 @@ jobs:
     executor: cidocker
     steps:
       - build_container
-  
+
   trigger_builds:
     environment:
       CIRCLE_REVERSE_DEPENDENCIES: buildos
