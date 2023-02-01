@@ -4,7 +4,7 @@ executors:
   cidocker:
     shell: /bin/bash
     docker:
-      - image: cibuilds/docker:19.03.5
+      - image: cimg/base:2023.01
 
 commands:
   build_container:
@@ -22,11 +22,16 @@ commands:
       - run: docker build -t $CONTAINER_NAME -f $DF .
       - run: |
           VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
+          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
+          echo $CIRCLE_BRANCH $BRANCH
           echo "Tagging as $CONTAINER_NAME:$VERSION"
           docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
-          echo "Tagging as $CONTAINER_NAME:${CIRCLE_BRANCH}"
-          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${CIRCLE_BRANCH}
-      - run: docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${CIRCLE_BRANCH}
+          echo "Tagging as $CONTAINER_NAME:${BRANCH}"
+          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${BRANCH}
+      - run: |
+          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
+          echo docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
+          docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
       - run: docker push $CONTAINER_NAME
 
 jobs:
@@ -46,7 +51,7 @@ jobs:
     executor: cidocker
     steps:
       - build_container
-  
+
   trigger_builds:
     environment:
       CIRCLE_REVERSE_DEPENDENCIES: buildos
@@ -56,7 +61,6 @@ jobs:
       - run: echo ./circle_ci_trigger_build
 
 workflows:
-  version: 2.1
   build-and-deploy:
     jobs:
       - build_ubuntu:
