@@ -22,7 +22,7 @@ commands:
           name: setup environment variables
           command: |
             echo 'export VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)' >> "$BASH_ENV"
-            echo 'export BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)' >> "$BASH_ENV"
+            echo 'export BRANCH=$(git name-rev HEAD | cut -d" " -f 2- | tr / _)' >> "$BASH_ENV"
       - run:
           name: log into quay
           command: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
