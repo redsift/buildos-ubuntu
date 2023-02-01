@@ -19,23 +19,24 @@ commands:
       - checkout
       - setup_remote_docker
       - run:
-          name: setup environment variables
-          command: |
-            echo 'export VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)' >> "$BASH_ENV"
-            echo 'export BRANCH=$(git name-rev HEAD | cut -d" " -f 2- | tr / _)' >> "$BASH_ENV"
-      - run:
           name: log into quay
           command: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
+      - run:
+          name: setup environment variables
+          command: |
+            echo 'set -x' >> "$BASH_ENV"
+            echo 'export VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)' >> "$BASH_ENV"
+            echo 'export BRANCH=$(git name-rev HEAD | cut -d" " -f 2- | tr / _)' >> "$BASH_ENV"
       - run:
           name: ensure the base image is fresh
           command: docker pull quay.io/redsift/baseos
       - run:
           name: build container
-          command: docker build ${ARGS} -t $CONTAINER_NAME -f $DF .
+          command: docker build ${BUILD_ARGS} -t $CONTAINER_NAME -f $DF .
       - run: |
           for TAG in "${VERSION}" "${BRANCH}" $VERSION_TAGS; do
             echo "Tagging as ${CONTAINER_NAME}:${TAG}"
-            docker tag $CONTAINER_NAME:latest ${CONTAINER_NAME}:${TAG}
+            docker tag $CONTAINER_NAME:latest "${CONTAINER_NAME}:${TAG}"
           done
       - run: docker push -q -a $CONTAINER_NAME
 
@@ -53,7 +54,7 @@ jobs:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-go-ubuntu
       DF: Dockerfile.go.ubuntu
-      ARGS: --build-arg GO_VERSION=1.19.5
+      BUILD_ARGS: --build-arg=GO_VERSION=1.19.5
       VERSION_TAGS: 1.19 1.19.5
     executor: cidocker
     steps:
