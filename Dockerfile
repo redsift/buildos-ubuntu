@@ -1,5 +1,4 @@
 FROM quay.io/redsift/baseos
-MAINTAINER Rahul Powar email: rahul@redsift.io version: 1.1.101
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \

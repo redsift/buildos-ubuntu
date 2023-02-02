@@ -9,36 +9,36 @@ executors:
 commands:
   build_container:
     steps:
-      - run: ssh -o StrictHostKeyChecking=no git@github.com || true
-      - run:
-          name: Configure git
-          command: |
-            rm ~/.gitconfig # delete junk from .gitconfig
-            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com".insteadOf "https://github.com"
-            git config --global url."https://${GITHUB_HTTP_TOKEN}:@github.com/".insteadOf "git@github.com:"
       - checkout
       - setup_remote_docker
-      - run: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
-      - run: docker build -t $CONTAINER_NAME -f $DF .
+      - run:
+          name: log into quay
+          command: docker login -u $QUAY_USER -p $QUAY_PASS quay.io
+      - run:
+          name: setup environment variables
+          command: |
+            echo 'set -x' >> "$BASH_ENV"
+            echo 'export VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)' >> "$BASH_ENV"
+            echo 'export BRANCH=$(git name-rev HEAD | cut -d" " -f 2- | tr / _)' >> "$BASH_ENV"
+      - run:
+          name: ensure the base image is fresh
+          command: docker pull quay.io/redsift/baseos
+      - run:
+          name: build container
+          command: docker build ${BUILD_ARGS} -t $CONTAINER_NAME -f $DF .
       - run: |
-          VERSION=$(git describe --exact-match --tags 2>/dev/null || git rev-parse --short HEAD)
-          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
-          echo $CIRCLE_BRANCH $BRANCH
-          echo "Tagging as $CONTAINER_NAME:$VERSION"
-          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:$VERSION
-          echo "Tagging as $CONTAINER_NAME:${BRANCH}"
-          docker tag $CONTAINER_NAME:latest $CONTAINER_NAME:${BRANCH}
-      - run: |
-          BRANCH=$(git name-rev HEAD | cut -d' ' -f 2- | tr / _)
-          echo docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
-          docker run -a stdout -a stderr --entrypoint=/usr/bin/${TV:-tools}-version-dump.sh $CONTAINER_NAME:${BRANCH}
-      - run: docker push $CONTAINER_NAME
+          for TAG in "${VERSION}" "${BRANCH}" $VERSION_TAGS; do
+            echo "Tagging as ${CONTAINER_NAME}:${TAG}"
+            docker tag $CONTAINER_NAME:latest "${CONTAINER_NAME}:${TAG}"
+          done
+      - run: docker push -q -a $CONTAINER_NAME
 
 jobs:
   build_ubuntu:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-ubuntu
       DF: Dockerfile
+      VERSION_TAGS: jdk8
     executor: cidocker
     steps:
       - build_container
@@ -47,18 +47,11 @@ jobs:
     environment:
       CONTAINER_NAME: quay.io/redsift/buildos-go-ubuntu
       DF: Dockerfile.go.ubuntu
-      TV: go
+      BUILD_ARGS: --build-arg=GO_VERSION=1.19.5
+      VERSION_TAGS: 1.19 1.19.5
     executor: cidocker
     steps:
       - build_container
-
-  trigger_builds:
-    environment:
-      CIRCLE_REVERSE_DEPENDENCIES: buildos
-    executor: cidocker
-    steps:
-      - checkout
-      - run: echo ./circle_ci_trigger_build
 
 workflows:
   build-and-deploy:
@@ -67,8 +60,3 @@ workflows:
           context: org-global
       - build_ubuntu_go:
           context: org-global
-      - trigger_builds:
-          context: org-global
-          requires:
-            - build_ubuntu
-            - build_ubuntu_go
